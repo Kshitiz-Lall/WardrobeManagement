@@ -1,0 +1,62 @@
+Table users {
+  id int [pk, increment]
+  username varchar(50) [unique, not null]
+  email varchar(100) [unique, not null]
+  password_hash varchar(255) [not null]
+  created_at timestamp [default: `now()`]
+}
+
+Table items {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  name varchar(100) [not null]
+  category_id int [ref: > categories.id]
+  color_id int [ref: > colors.id]
+  size varchar(20)
+  material varchar(50)
+  brand varchar(50)
+  price decimal(10, 2) [default: 0.00]
+  quantity int [default: 1]
+  image_url varchar(255)
+  created_at timestamp [default: `now()`]
+}
+
+Table categories {
+  id int [pk, increment]
+  name varchar(50) [unique, not null]
+  description text
+}
+
+Table colors {
+  id int [pk, increment]
+  name varchar(30) [unique, not null]
+}
+
+Table user_sessions {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  token varchar(255) [unique, not null]
+  created_at timestamp [default: `now()`]
+  expires_at timestamp
+}
+
+Table tags {
+  id int [pk, increment]
+  name varchar(50) [unique, not null]
+}
+
+Table item_tags {
+  id int [pk, increment]
+  item_id int [ref: > items.id]
+  tag_id int [ref: > tags.id]
+  created_at timestamp [default: `now()`]
+}
+
+Table reviews {
+  id int [pk, increment]
+  user_id int [ref: > users.id]
+  item_id int [ref: > items.id]
+  rating int [not null]
+  comment text
+  created_at timestamp [default: `now()`]
+}
