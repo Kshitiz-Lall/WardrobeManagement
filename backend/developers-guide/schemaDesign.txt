@@ -1,62 +1,184 @@
-Table users {
-  id int [pk, increment]
-  username varchar(50) [unique, not null]
-  email varchar(100) [unique, not null]
-  password_hash varchar(255) [not null]
-  created_at timestamp [default: `now()`]
+Users Collection
+Items Collection
+Categories Collection
+Colors Collection
+UserSessions Collection
+Tags Collection
+ItemTags Collection
+Reviews Collection
+
+{
+  "users": {
+    "user_id": "ObjectId",
+    "username": "string",
+    "email": "string",
+    "password_hash": "string",
+    "created_at": "timestamp"
+  },
+  "items": {
+    "item_id": "ObjectId",
+    "user_id": "ObjectId",
+    "name": "string",
+    "category_id": "ObjectId",
+    "color_id": "ObjectId",
+    "size": "string",
+    "material": "string",
+    "brand": "string",
+    "price": "decimal",
+    "quantity": "integer",
+    "image_url": "string",
+    "created_at": "timestamp"
+  },
+  "categories": {
+    "category_id": "ObjectId",
+    "name": "string",
+    "description": "string"
+  },
+  "colors": {
+    "color_id": "ObjectId",
+    "name": "string"
+  },
+  "user_sessions": {
+    "session_id": "ObjectId",
+    "user_id": "ObjectId",
+    "token": "string",
+    "created_at": "timestamp",
+    "expires_at": "timestamp"
+  },
+  "tags": {
+    "tag_id": "ObjectId",
+    "name": "string"
+  },
+  "item_tags": {
+    "item_tag_id": "ObjectId",
+    "item_id": "ObjectId",
+    "tag_id": "ObjectId",
+    "created_at": "timestamp"
+  },
+  "reviews": {
+    "review_id": "ObjectId",
+    "user_id": "ObjectId",
+    "item_id": "ObjectId",
+    "rating": "integer",
+    "comment": "string",
+    "created_at": "timestamp"
+  }
 }
 
-Table items {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  name varchar(100) [not null]
-  category_id int [ref: > categories.id]
-  color_id int [ref: > colors.id]
-  size varchar(20)
-  material varchar(50)
-  brand varchar(50)
-  price decimal(10, 2) [default: 0.00]
-  quantity int [default: 1]
-  image_url varchar(255)
-  created_at timestamp [default: `now()`]
+Users Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "username": "string",
+  "email": "string",
+  "password_hash": "string",
+  "created_at": ISODate
 }
 
-Table categories {
-  id int [pk, increment]
-  name varchar(50) [unique, not null]
-  description text
+Items Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "user_id": ObjectId, // Reference to Users Collection
+  "name": "string",
+  "category_id": ObjectId, // Reference to Categories Collection
+  "color_id": ObjectId, // Reference to Colors Collection
+  "size": "string",
+  "material": "string",
+  "brand": "string",
+  "price": NumberDecimal("10.00"),
+  "quantity": 1,
+  "image_url": "string",
+  "created_at": ISODate
 }
 
-Table colors {
-  id int [pk, increment]
-  name varchar(30) [unique, not null]
+Categories Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "name": "string",
+  "description": "string"
 }
 
-Table user_sessions {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  token varchar(255) [unique, not null]
-  created_at timestamp [default: `now()`]
-  expires_at timestamp
+Colors Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "name": "string"
 }
 
-Table tags {
-  id int [pk, increment]
-  name varchar(50) [unique, not null]
+UserSessions Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "user_id": ObjectId, // Reference to Users Collection
+  "token": "string",
+  "created_at": ISODate,
+  "expires_at": ISODate
 }
 
-Table item_tags {
-  id int [pk, increment]
-  item_id int [ref: > items.id]
-  tag_id int [ref: > tags.id]
-  created_at timestamp [default: `now()`]
+Tags Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "name": "string"
 }
 
-Table reviews {
-  id int [pk, increment]
-  user_id int [ref: > users.id]
-  item_id int [ref: > items.id]
-  rating int [not null]
-  comment text
-  created_at timestamp [default: `now()`]
+ItemTags Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "item_id": ObjectId, // Reference to Items Collection
+  "tag_id": ObjectId, // Reference to Tags Collection
+  "created_at": ISODate
+}
+
+Reviews Collection
+
+json
+
+{
+  "_id": ObjectId,
+  "user_id": ObjectId, // Reference to Users Collection
+  "item_id": ObjectId, // Reference to Items Collection
+  "rating": "integer",
+  "comment": "string",
+  "created_at": ISODate
+}
+
+Expanding the Schema for Additional Items (e.g., Shoes, Jewelry)
+
+To accommodate additional item types like shoes and jewelry, you can use the same items collection but add fields to specify the type and relevant attributes:
+
+json
+
+{
+  "_id": ObjectId,
+  "user_id": ObjectId, // Reference to Users Collection
+  "name": "string",
+  "category_id": ObjectId, // Reference to Categories Collection
+  "color_id": ObjectId, // Reference to Colors Collection
+  "size": "string",
+  "material": "string",
+  "brand": "string",
+  "price": NumberDecimal("10.00"),
+  "quantity": 1,
+  "image_url": "string",
+  "created_at": ISODate,
+  "type": "string", // e.g., "clothing", "shoes", "jewelry"
+  // Additional fields specific to item types can be added here
 }
